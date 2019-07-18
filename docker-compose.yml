@@ -1,0 +1,43 @@
+version: '2'
+
+services:
+    postgres:
+        image: camptocamp/dataverse-postgresql
+        volumes:
+          - ./data/db:/var/lib/postgresql/data
+    solr:
+        image: camptocamp/dataverse-solr
+        environment:
+          - "SOLR_HOST=solr"
+          - "SOLR_PORT=8983"
+        volumes:
+          - ./data/solr:/usr/local/solr-7.3.0/example/solr/collection1/data
+    dataverse:
+        image: camptocamp/dataverse-dataverse
+        ports:
+          - "8080:8080"
+        environment:
+          - "HOST_DNS_ADDRESS=0.0.0.0"
+          - "LANG=en"
+          - "BUNDLEPROPERTIES=Bundle.properties"
+          - "GLASSFISH_DIRECTORY=/opt/glassfish4"
+          - "ADMIN_EMAIL=admin@localhost"
+          - "MAIL_SERVER=mailrelay"
+          - "POSTGRES_ADMIN_PASSWORD=secret"
+          - "POSTGRES_SERVER=postgres"
+          - "POSTGRES_PORT=5432"
+          - "POSTGRES_DATABASE=dvndb"
+          - "POSTGRES_USER=dvnapp"
+          - "POSTGRES_PASSWORD=secret"
+          - "SOLR_LOCATION=solr:8983"
+          - "TWORAVENS_LOCATION=NOT INSTALLED"
+          - "RSERVE_HOST=localhost"
+          - "RSERVE_PORT=6311"
+          - "RSERVE_USER=rserve"
+          - "RSERVE_PASSWORD=rserve"
+        depends_on:
+          - postgres
+          - solr
+        volumes:
+          - ./data/dataverse:/usr/local/glassfish4/glassfish/domains/domain1/files
+
