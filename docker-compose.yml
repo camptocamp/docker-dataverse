@@ -3,6 +3,10 @@ version: '2'
 services:
     postgres:
         image: camptocamp/dataverse-postgresql
+        environment:
+        - "POSTGRES_USER=dvnapp"
+        - "POSTGRES_PASSWORD=secret"
+        - "POSTGRES_DB=dvndb"
         volumes:
           - ./data/db:/var/lib/postgresql/data
     solr:
